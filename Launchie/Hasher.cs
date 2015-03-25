@@ -9,21 +9,21 @@ namespace Launchie
     {
         private static readonly Dictionary<string, byte[]> Hashes = new Dictionary<string, byte[]>();
 
-        public static byte[] GetDirectoryHash(string rootDir, bool cacheHashes=false)
+        public static byte[] GetDirectoryHash(string rootDir, bool cacheHashes=true)
         {
             var hash = new List<byte>();
             foreach (var subDir in Directory.GetDirectories(rootDir))
             {
-                hash.AddRange(GetDirectoryHash(subDir));
+                hash.AddRange(GetDirectoryHash(subDir, cacheHashes));
             }
             foreach (var file in Directory.GetFiles(rootDir))
             {
-                hash.AddRange(GetFileHash(file));
+                hash.AddRange(GetFileHash(file, cacheHashes));
             }
             return hash.ToArray();
         }
 
-        public static byte[] GetFileHash(string filename, bool cacheHashes=false)
+        public static byte[] GetFileHash(string filename, bool cacheHashes=true)
         {
             if (Hashes.ContainsKey(filename))
             {
