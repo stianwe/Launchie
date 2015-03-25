@@ -7,7 +7,9 @@ namespace Launchie
 {
     public class Hasher
     {
-        public static byte[] GetDirectoryHash(string rootDir)
+        private static readonly Dictionary<string, byte[]> Hashes = new Dictionary<string, byte[]>();
+
+        public static byte[] GetDirectoryHash(string rootDir, bool cacheHashes=false)
         {
             var hash = new List<byte>();
             foreach (var subDir in Directory.GetDirectories(rootDir))
@@ -21,14 +23,23 @@ namespace Launchie
             return hash.ToArray();
         }
 
-        public static byte[] GetFileHash(string filename)
+        public static byte[] GetFileHash(string filename, bool cacheHashes=false)
         {
+            if (Hashes.ContainsKey(filename))
+            {
+                return Hashes[filename];
+            }
             Log("Computing hash for file: " + filename);
             using (var md5 = MD5.Create())
             {
                 using (var stream = File.OpenRead(filename))
                 {
-                    return md5.ComputeHash(stream);
+                    var hash = md5.ComputeHash(stream);
+                    if (cacheHashes)
+                    {
+                        Hashes[filename] = hash;
+                    }
+                    return hash;
                 }
             }
         }
