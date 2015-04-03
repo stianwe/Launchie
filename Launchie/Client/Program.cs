@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.IO;
+using Launchie;
 
 namespace Client
 {
@@ -12,7 +13,7 @@ namespace Client
 		public static void Main (string[] args)
 		{
 			Console.WriteLine ("Computing hashes of local files..");
-			var hash = Hasher
+			var hash = Hasher.GetDirectoryHash ("~/test/client", false);
 			Console.WriteLine ("Connecting to " + Host + " on " + Port);
 			using (var client = new TcpClient (Host, Port)) 
 			{

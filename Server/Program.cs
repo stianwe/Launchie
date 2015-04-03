@@ -45,7 +45,7 @@ namespace Server
 					using (var writer = new StreamWriter (s)) 
 					{
 						writer.AutoFlush = true;
-						Console.WriteLine ("Sending message to client");
+						Console.WriteLine ("Sending hashes to clients");
 						writer.WriteLine ("Hei");
 						Console.WriteLine ("Closing connection");
 					}
