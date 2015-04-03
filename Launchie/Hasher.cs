@@ -7,7 +7,7 @@ namespace Launchie
 {
     public class Hasher
     {
-        private static readonly Dictionary<string, byte[]> Hashes = new Dictionary<string, byte[]>();
+        public static readonly Dictionary<string, byte[]> Hashes = new Dictionary<string, byte[]>();
 
         public static byte[] GetDirectoryHash(string rootDir, bool cacheHashes=true)
         {

@@ -1,0 +1,5 @@
+﻿<Properties StartupItem="../Server/Server.csproj">
+  <DisabledProjects>
+    <String>Client/Client.csproj</String>
+  </DisabledProjects>
+</Properties>
