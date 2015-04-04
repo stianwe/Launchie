@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Net;
 using System.Net.Sockets;
-using System.IO;
+using Launchie;
 
 namespace Server
 {
@@ -21,7 +17,7 @@ namespace Server
 
         static void Main(string[] args)
         {
-			_server = new Server ("~/test/server");
+			_server = new Server ("/home/stian/test/server/");
 			Console.WriteLine ("Computing file hashes..");
 			_server.ComputeFileHashes ();
 			Console.WriteLine ("Done.");
@@ -42,13 +38,18 @@ namespace Server
 				Console.WriteLine ("Client connected: " + sock.RemoteEndPoint);
 				using (var s = new NetworkStream (sock)) 
 				{
-					using (var writer = new StreamWriter (s)) 
+					Console.WriteLine ("Sending hashes to client");
+					new HashesContainer (_server.Hashes).Serialize (s);
+					Console.WriteLine ("Closing connection");
+					/*using (var writer = new StreamWriter (s)) 
 					{
 						writer.AutoFlush = true;
 						Console.WriteLine ("Sending hashes to clients");
+						using (var serializer = new BinaryFo
+						s.Write(
 						writer.WriteLine ("Hei");
 						Console.WriteLine ("Closing connection");
-					}
+					}*/
 				}
 			}
 		}

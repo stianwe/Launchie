@@ -9,21 +9,29 @@ namespace Launchie
     {
         public static readonly Dictionary<string, byte[]> Hashes = new Dictionary<string, byte[]>();
 
-        public static byte[] GetDirectoryHash(string rootDir, bool cacheHashes=true)
+		public static byte[] GetDirectoryHash(string rootDir, bool cacheHashes=true)
+		{
+			if (rootDir [rootDir.Length - 1] != '/') {
+				rootDir += "/";
+			}
+			return GetDirectoryHashHelper (rootDir, rootDir.Length, cacheHashes);
+		}
+
+        private static byte[] GetDirectoryHashHelper(string rootDir, int fileNameStartIndex, bool cacheHashes=true)
         {
             var hash = new List<byte>();
             foreach (var subDir in Directory.GetDirectories(rootDir))
             {
-                hash.AddRange(GetDirectoryHash(subDir, cacheHashes));
+                hash.AddRange(GetDirectoryHashHelper(subDir, fileNameStartIndex, cacheHashes));
             }
             foreach (var file in Directory.GetFiles(rootDir))
             {
-                hash.AddRange(GetFileHash(file, cacheHashes));
+				hash.AddRange(GetFileHash(file, fileNameStartIndex, cacheHashes));
             }
             return hash.ToArray();
         }
 
-        public static byte[] GetFileHash(string filename, bool cacheHashes=true)
+		public static byte[] GetFileHash(string filename, int fileNameStartIndex, bool cacheHashes=true)
         {
             if (Hashes.ContainsKey(filename))
             {
@@ -37,7 +45,9 @@ namespace Launchie
                     var hash = md5.ComputeHash(stream);
                     if (cacheHashes)
                     {
-                        Hashes[filename] = hash;
+						var name = filename.Substring (fileNameStartIndex);
+						Console.WriteLine ("Saving hash for " + name);
+						Hashes[name] = hash;
                     }
                     return hash;
                 }
