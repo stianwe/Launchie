@@ -11,14 +11,14 @@ namespace Client
 
 		public static void Main (string[] args)
 		{
-			var rootDir = "/home/stian/test/client";
+            var rootDir = "C:/test/client";
+			//var rootDir = "/home/stian/test/client";
 
 			var hashDownloader = new HashDownloader (rootDir);
 			var filesToDownload = hashDownloader.GetMissingOrDifferentFileNames ();
 			foreach (var file in filesToDownload) {
-				//FileDownloader.DownloadFile (rootDir, file);
+				FileDownloader.DownloadFile (rootDir, file);
 			}
-			FileDownloader.DownloadFile (rootDir, "file1.txt");
 		}
 	}
 }

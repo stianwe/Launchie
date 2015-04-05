@@ -39,7 +39,7 @@ namespace Server
 		{
 			while (true) {
 				using (var sock = _listener.AcceptSocket ()) {
-					Console.WriteLine ("Client connected: " + sock.RemoteEndPoint);
+					Console.WriteLine ("Client connected to hash server: " + sock.RemoteEndPoint);
 					using (var s = new NetworkStream (sock)) {
 						Console.WriteLine ("Sending hashes to client.");
 						new HashesContainer (Hasher.Hashes).Serialize (s);

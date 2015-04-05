@@ -34,8 +34,7 @@ namespace Server
 		public void Service() {
 			while (true) {
 				using (var sock = _listener.AcceptSocket ()) {
-					Console.WriteLine ("Client connected: " + sock.RemoteEndPoint);
-					/*
+					Console.WriteLine ("Client connected to file server: " + sock.RemoteEndPoint);
 					using (var stream = new NetworkStream (sock)) {
 						using (var reader = new StreamReader (stream)) {
 							Console.WriteLine ("Waiting for file name..");
@@ -49,10 +48,6 @@ namespace Server
 							sock.Close ();
 						}
 					}
-					*/
-					Console.WriteLine ("Sending file..");
-					sock.SendFile ("/home/stian/test/server/file1.txt");
-					Console.WriteLine ("Done sending file.");
 				}
 			}
 		}

@@ -11,7 +11,7 @@ namespace Server
 
 		public const int ClientLimit = 5;
 
-		public const string rootDir = "/home/stian/test/server";
+		public const string rootDir = "C:/test/server";
 
         static void Main(string[] args)
         {
