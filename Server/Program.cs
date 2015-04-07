@@ -1,24 +1,23 @@
-﻿using System;
-using System.Threading;
-using System.Net.Sockets;
+﻿
 using Launchie;
 
 namespace Server
 {
     class Program
     {
-		public const int Port = 13337;
+        public static readonly Version Version = new Version("0.0.1");
 
-		public const int ClientLimit = 5;
+		public const string RootDir = "C:/Users/Stian/Desktop/TEST";
 
-		public const string rootDir = "C:/test/server";
+        private static readonly Logger _logger = new Logger();
 
         static void Main(string[] args)
         {
-			var hashServer = new HashServer (rootDir);
+            _logger.Log("Launchie server v" + Version + ".", Logger.LogLevel.Medium);
+			var hashServer = new HashServer (RootDir);
 			hashServer.Start ();
 
-			var fileServer = new FileServer (rootDir);
+			var fileServer = new FileServer (RootDir);
 			fileServer.Start ();
         }
     }

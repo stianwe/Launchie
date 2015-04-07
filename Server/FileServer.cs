@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using System.Threading;
 using System.IO;
+using Launchie;
 
 namespace Server
 {
@@ -15,37 +16,49 @@ namespace Server
 
 		private TcpListener _listener;
 
+	    private Logger _logger;
+
 		public FileServer (string rootDir)
 		{
 			_rootDir = rootDir;
+            _logger = new Logger("FileServer");
 		}
 
 		public void Start() {
-			Console.WriteLine ("Starting file server..");
+            _logger.Log("Starting..", Logger.LogLevel.Medium);
+            _logger.Log("Port: " + Port, Logger.LogLevel.Medium);
+            _logger.Log("Root directory: " + _rootDir, Logger.LogLevel.Medium);
+            _logger.Log("Client limit: " + ClientLimit, Logger.LogLevel.Medium);
+            _logger.Log("Starting TCP listener on port " + Port + "..", Logger.LogLevel.Medium);
 			_listener = new TcpListener (Port);
 			_listener.Start ();
-			Console.WriteLine ("File server started on port " + Port);
+            _logger.Log("Done.", Logger.LogLevel.Medium);
+            _logger.Log("Starting " + ClientLimit + " client file service threads..", Logger.LogLevel.Medium);
 			for (var i = 0; i < ClientLimit; i++) {
+                _logger.Log("Starting client file service thread (" + i + ")..", Logger.LogLevel.Verbose);
 				new Thread (Service).Start ();
-				Console.WriteLine ("Started client file service thread.");
+				_logger.Log("Done.", Logger.LogLevel.Verbose);
 			}
+            _logger.Log("Done.", Logger.LogLevel.Medium);
+            _logger.Log("Successfully started.", Logger.LogLevel.Medium);
 		}
 
 		public void Service() {
 			while (true) {
+                _logger.Log("Client file service thread accepting incoming connections.", Logger.LogLevel.Verbose);
 				using (var sock = _listener.AcceptSocket ()) {
-					Console.WriteLine ("Client connected to file server: " + sock.RemoteEndPoint);
+                    _logger.Log("Client connected: " + sock.RemoteEndPoint, Logger.LogLevel.Verbose);
 					using (var stream = new NetworkStream (sock)) {
 						using (var reader = new StreamReader (stream)) {
-							Console.WriteLine ("Waiting for file name..");
+                            _logger.Log("Waiting for file name..", Logger.LogLevel.Verbose);
 							var fileName = reader.ReadLine ();
-							Console.WriteLine ("Received request for file: " + fileName);
+                            _logger.Log("Received request for file: " + fileName, Logger.LogLevel.Verbose);
 							var filePath = _rootDir + "/" + fileName;
-							Console.WriteLine ("Sending file " + filePath);
+                            _logger.Log("Sending file: " + filePath, Logger.LogLevel.Verbose);
 							sock.SendFile (filePath);
-							Console.WriteLine ("Done.");
 							sock.Shutdown (SocketShutdown.Both);
-							sock.Close ();
+                            sock.Close();
+                            _logger.Log("Done.", Logger.LogLevel.Verbose);
 						}
 					}
 				}

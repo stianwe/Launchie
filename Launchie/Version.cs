@@ -87,5 +87,19 @@ namespace Launchie
         {
             return v1 == v2 || v1 > v2;
         }
+
+        public override string ToString()
+        {
+            var s = "";
+            for (int i = 0; i < _vs.Count; i++)
+            {
+                if (i > 0)
+                {
+                    s += ".";
+                }
+                s += _vs[i];
+            }
+            return s;
+        }
     }
 }

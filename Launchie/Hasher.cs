@@ -9,6 +9,8 @@ namespace Launchie
     {
         public static readonly Dictionary<string, byte[]> Hashes = new Dictionary<string, byte[]>();
 
+        private static Logger _logger =  new Logger("Hasher");
+
 		public static byte[] GetDirectoryHash(string rootDir, bool cacheHashes=true)
 		{
 			if (rootDir [rootDir.Length - 1] != '/') {
@@ -74,7 +76,7 @@ namespace Launchie
 
         private static void Log(string msg)
         {
-            Console.WriteLine(msg);
+            _logger.Log(msg, Logger.LogLevel.Verbose);
         }
     }
 }

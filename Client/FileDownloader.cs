@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.IO;
+using Launchie;
 
 namespace Client
 {
@@ -12,10 +13,14 @@ namespace Client
 
 		public const int Port = 13338;
 
+        private static Logger _logger = new Logger("FileDownloader");
+
 		public static void DownloadFile(string rootDir, string fileName) {
+            _logger.Log("Downloading file: " + fileName, Logger.LogLevel.Verbose);
 			var fullPath = rootDir + "/" + fileName;
+            _logger.Log("Full path: " + fullPath, Logger.LogLevel.Verbose);
 			CreateDirs (fullPath);
-			Console.WriteLine ("Connecting to file server..");
+            _logger.Log("Connecting to fil eserver..", Logger.LogLevel.Verbose);
 			using (var client = new TcpClient(Host, Port))
 			//using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
 			using (var output = File.Create(fullPath))
@@ -24,36 +29,38 @@ namespace Client
 				//socket.Connect (Host, Port);
 				using (var writer = new StreamWriter (networkStream)) {
 					writer.AutoFlush = true;
-					Console.WriteLine ("Requesting file: " + fileName);
+                    _logger.Log("Requesting file: " + fileName + "..", Logger.LogLevel.Verbose);
                     writer.WriteLine(fileName);
                     var buffer = new byte[BufferSize];
                     int bytesRead = 0;
-                    Console.Write("Receiving file..");
+				    int totalBytesRead = 0;
+                    _logger.LogNoLineShift("Receiving file..", Logger.LogLevel.Verbose);
                     //while ((bytesRead = socket.Receive(buffer)) > 0) {
                     while ((bytesRead = networkStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
-                        Console.Write(".");
-                        Console.WriteLine("Read " + bytesRead + " bytes");
+                        _logger.LogNoComponentName(".", Logger.LogLevel.Verbose);
+                        totalBytesRead += bytesRead;
                         output.Write(buffer, 0, bytesRead);
                     }
-                    Console.WriteLine();
-                    Console.WriteLine("Done.");
+                    _logger.LogNoComponentName("\n", Logger.LogLevel.Verbose);
+                    _logger.Log("Total bytes read: " + totalBytesRead, Logger.LogLevel.Verbose);
 				}
 			}
 		}
 
 		public static void CreateDirs(string path) {
+            _logger.Log("Creating directory: " + path, Logger.LogLevel.Verbose);
             var dirPathLength = Math.Max(path.LastIndexOf('/'), path.LastIndexOf('\\'));
 			var dir = path.Substring (0, dirPathLength);
-            Console.WriteLine("Checking directory: " + dir + " (full path: " + path + ")");
+            _logger.Log("Checking directory: " + dir + " (full path: " + path + ")", Logger.LogLevel.Verbose);
 			if (!Directory.Exists (dir)) {
-				Console.WriteLine ("Directory does not exist - creating (" + dir + ")");
+				_logger.Log("Directory does not exist - creating (" + dir + ")", Logger.LogLevel.Verbose);
 				Directory.CreateDirectory (dir);
-				Console.WriteLine ("Done.");
+				_logger.Log("Done", Logger.LogLevel.Verbose);
             }
             else
             {
-                Console.WriteLine("Directory already exists.");
+                _logger.Log("Directory alread exist.", Logger.LogLevel.Verbose);
             }
 		}
 	}
