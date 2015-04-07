@@ -31,11 +31,11 @@ namespace Server
             _logger.Log("Computing file hashes..", Logger.LogLevel.Medium);
 			Hasher.GetDirectoryHash (_rootDir, true);
             _logger.Log("Done.", Logger.LogLevel.Medium);
-			_logger.Log("Starting TCP listener on port " + Port + "..");
+			_logger.Log("Starting TCP listener on port " + Port + "..", Logger.LogLevel.Medium);
 			_listener = new TcpListener (Port);
 			_listener.Start ();
             _logger.Log("Done.", Logger.LogLevel.Medium);
-            _logger.Log("Starting " + ClientLimit + " client hash service threads..");
+            _logger.Log("Starting " + ClientLimit + " client hash service threads..", Logger.LogLevel.Medium);
 			for (var i = 0; i < ClientLimit; i++) 
 			{
                 _logger.Log("Starting client hash service thread (" + i + ")..", Logger.LogLevel.Verbose);

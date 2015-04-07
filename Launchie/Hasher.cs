@@ -48,7 +48,7 @@ namespace Launchie
                     if (cacheHashes)
                     {
 						var name = filename.Substring (fileNameStartIndex);
-						Console.WriteLine ("Saving hash for " + name);
+						Log ("Saving hash for " + name);
 						Hashes[name] = hash;
                     }
                     return hash;

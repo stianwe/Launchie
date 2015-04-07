@@ -7,7 +7,7 @@ namespace Server
     {
         public static readonly Version Version = new Version("0.0.1");
 
-		public const string RootDir = "C:/Users/Stian/Desktop/TEST";
+		public const string RootDir = "C:/Users/Stian/Desktop/TEST/server";
 
         private static readonly Logger _logger = new Logger();
 

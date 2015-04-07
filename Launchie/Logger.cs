@@ -15,11 +15,9 @@ namespace Launchie
 
         public LogLevel FileLogLevel = LogLevel.Verbose;
 
-        public Logger(string logFilePath="LAUNCHIE_LOG.txt") : this(null, logFilePath)
-        {
-        }
+        private static object _fileLock = new object();
 
-        public Logger(string componentName, string logFilePath="LAUNCHIE_LOG.txt")
+        public Logger(string componentName=null, string logFilePath="LAUNCHIE_LOG.txt")
         {
             _componentName = componentName;
             _logFilePath = logFilePath;
@@ -42,16 +40,25 @@ namespace Launchie
             }
             if (_logFilePath != null && ShouldBeLogged(logLevel, FileLogLevel))
             {
-                using (var writer = File.AppendText(_logFilePath))
-                {
-                    writer.Write(msg);
-                }
+                WriteToFile(msg, _logFilePath);
             }
         }
 
         public void Log(string msg, LogLevel logLevel)
         {
             LogNoLineShift(msg + "\n", logLevel);
+        }
+
+        private static void WriteToFile(string msg, string path)
+        {
+            // TODO Can be improved by checking which file is being written to..
+            lock (_fileLock)
+            {
+                using (var writer = File.AppendText(path))
+                {
+                    writer.Write(msg);
+                }
+            }
         }
 
         public enum LogLevel

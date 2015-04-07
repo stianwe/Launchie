@@ -9,9 +9,9 @@ namespace Client
     {
         public static readonly Version Version = new Version("0.0.1");
 
-        public const string ProgramToRun = "PedalTanks.exe";
+        public const string ProgramToRun = "PedalTanks_0.0.7/PedalTanks_0.0.7.exe";
 
-	    public const string RootPath = "";
+        public const string RootPath = "C:/Users/Stian/Desktop/TEST/client";
 
         private static readonly Logger _logger = new Logger();
 
@@ -30,10 +30,11 @@ namespace Client
             }
 
             _logger.Log("Done checking files.", Logger.LogLevel.Medium);
-            _logger.Log("Launching program: " + ProgramToRun + "..", Logger.LogLevel.Verbose);
+		    var fullPath = RootPath + "/" + ProgramToRun;
+            _logger.Log("Launching program: " + fullPath + "..", Logger.LogLevel.Verbose);
 		    var start = new ProcessStartInfo
 		    {
-		        FileName = ProgramToRun,
+		        FileName = fullPath,
 		    };
 		    Process.Start(start);
             _logger.Log("Done.", Logger.LogLevel.Verbose);
