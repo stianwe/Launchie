@@ -37,7 +37,8 @@ namespace Launchie
         {
 		    if (Blacklist.IsBlackListed(filename))
 		    {
-		        Log("File is blacklisted: " + filename, Logger.LogLevel.Medium);
+		        Log("File is blacklisted: " + filename + " - Skipping", Logger.LogLevel.Verbose);
+		        return new byte[0];
 		    }
             if (Hashes.ContainsKey(filename))
             {
