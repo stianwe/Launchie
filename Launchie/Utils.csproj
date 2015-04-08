@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Blacklist.cs" />
     <Compile Include="Hasher.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />

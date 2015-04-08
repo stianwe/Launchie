@@ -35,6 +35,10 @@ namespace Launchie
 
 		public static byte[] GetFileHash(string filename, int fileNameStartIndex, bool cacheHashes=true)
         {
+		    if (Blacklist.IsBlackListed(filename))
+		    {
+		        Log("File is blacklisted: " + filename, Logger.LogLevel.Medium);
+		    }
             if (Hashes.ContainsKey(filename))
             {
                 return Hashes[filename];
@@ -74,9 +78,9 @@ namespace Launchie
             return true;
         }
 
-        private static void Log(string msg)
+        private static void Log(string msg, Logger.LogLevel logLevel = Logger.LogLevel.Verbose)
         {
-            _logger.Log(msg, Logger.LogLevel.Verbose);
+            _logger.Log(msg, logLevel);
         }
     }
 }
