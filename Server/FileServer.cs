@@ -55,10 +55,17 @@ namespace Server
                             _logger.Log("Received request for file: " + fileName, Logger.LogLevel.Verbose);
 							var filePath = _rootDir + "/" + fileName;
                             _logger.Log("Sending file: " + filePath, Logger.LogLevel.Verbose);
-							sock.SendFile (filePath);
-							sock.Shutdown (SocketShutdown.Both);
-                            sock.Close();
-                            _logger.Log("Done.", Logger.LogLevel.Verbose);
+						    try
+						    {
+						        sock.SendFile(filePath);
+						        sock.Shutdown(SocketShutdown.Both);
+						        sock.Close();
+						    }
+						    catch (SocketException e)
+						    {
+						        _logger.Log("Error while sending file (" + filePath + "): " + e.StackTrace, Logger.LogLevel.Verbose);
+						    }
+						    _logger.Log("Done.", Logger.LogLevel.Verbose);
 						}
 					}
 				}
