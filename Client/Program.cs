@@ -23,12 +23,22 @@ namespace Client
             _logger.Log("Done.", Logger.LogLevel.Verbose);
             _logger.Log("Checking files..", Logger.LogLevel.Medium);
             var filesToDownload = hashDownloader.GetMissingOrDifferentFileNames ();
-            foreach (var file in filesToDownload) {
-                _logger.Log("Downloading file: " + file + "..", Logger.LogLevel.Medium);
-                FileDownloader.DownloadFile (RootPath, file);
-                _logger.Log("Done.", Logger.LogLevel.Medium);
-            }
-
+            _logger.Log("Downloading missing or outdated files..", Logger.LogLevel.Medium);
+		    var nFilesToDownload = filesToDownload.Count;
+		    for (var i = 0; i < nFilesToDownload; i++)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+                string progressText = "(" + (i + 1) + "/" + nFilesToDownload + ")";
+		        string logLine = filesToDownload[i];
+		        if (logLine.Length + progressText.Length >= Console.BufferWidth)
+		        {
+		            logLine = logLine.Substring(0, Console.BufferWidth - progressText.Length - 3) + "...";
+		        }
+                Console.Write(logLine);
+                Console.SetCursorPosition(Console.BufferWidth - progressText.Length, Console.CursorTop);
+                Console.Write(progressText);
+		        FileDownloader.DownloadFile(RootPath, filesToDownload[i]);
+		    }
             _logger.Log("Done checking files.", Logger.LogLevel.Medium);
 		    var fullPath = RootPath + "/" + ProgramToRun;
             _logger.Log("Launching program: " + fullPath + "..", Logger.LogLevel.Verbose);

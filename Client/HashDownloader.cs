@@ -35,12 +35,12 @@ namespace Client
             _logger.Log("Comparing hashes..", Logger.LogLevel.Verbose);
 			foreach (var serverFileName in serverHashes.Keys) 
 			{
-                _logger.Log("Checking file: " + serverFileName + "..", Logger.LogLevel.Medium);
+                _logger.Log("Checking file: " + serverFileName + "..", Logger.LogLevel.Verbose);
 				if (!localHashes.ContainsKey (serverFileName)) {
-					_logger.Log("File is missing.", Logger.LogLevel.Medium);
+					_logger.Log("File is missing.", Logger.LogLevel.Verbose);
 					missingOrDifferent.Add (serverFileName);
 				} else if (!Hasher.CompareHashes (localHashes [serverFileName], serverHashes [serverFileName])) {
-					_logger.Log("File is different.", Logger.LogLevel.Medium);
+					_logger.Log("File is different.", Logger.LogLevel.Verbose);
 					missingOrDifferent.Add (serverFileName);
 				} else {
 					_logger.Log("File OK", Logger.LogLevel.Verbose);
