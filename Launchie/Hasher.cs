@@ -35,7 +35,7 @@ namespace Launchie
 
 		public static byte[] GetFileHash(string filename, int fileNameStartIndex, bool cacheHashes=true)
         {
-		    if (Blacklist.IsBlackListed(filename))
+		    if (Blacklist.IsBlackListed(filename) || filename == Logger.LogFilePath)
 		    {
 		        Log("File is blacklisted: " + filename + " - Skipping", Logger.LogLevel.Verbose);
 		        return new byte[0];
