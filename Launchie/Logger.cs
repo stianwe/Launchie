@@ -15,15 +15,18 @@ namespace Launchie
 
         public LogLevel FileLogLevel = LogLevel.Verbose;
 
-        private static object _fileLock = new object();
+        private static readonly object FileLock = new object();
 
         public Logger(string componentName=null, string logFilePath="LAUNCHIE_LOG.txt")
         {
             _componentName = componentName;
             _logFilePath = logFilePath;
-            if (!File.Exists(_logFilePath))
+            lock (FileLock)
             {
-                File.Create(_logFilePath);
+                if (!File.Exists(_logFilePath))
+                {
+                    File.Create(_logFilePath).Dispose();
+                }
             }
         }
 
@@ -52,7 +55,7 @@ namespace Launchie
         private static void WriteToFile(string msg, string path)
         {
             // TODO Can be improved by checking which file is being written to..
-            lock (_fileLock)
+            lock (FileLock)
             {
                 using (var writer = File.AppendText(path))
                 {
