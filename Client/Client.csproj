@@ -6,7 +6,7 @@
     <ProjectGuid>{DE166F2A-C851-4EF5-8596-3FBC2F27CC6F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Client</RootNamespace>
-    <AssemblyName>Client</AssemblyName>
+    <AssemblyName>Launcher</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
 using Launchie;
 using Version = System.Version;
 
@@ -7,26 +9,35 @@ namespace Client
 {
 	class MainClass
     {
-        public static readonly Version Version = new Version("0.0.1");
+        public static readonly Version Version = new Version("0.0.2");
+
+	    public const string LauncherFileName = "Launcher.exe";
+	    public const string OldLuancherFileName = "Launcher_old.exe";
 
         public const string ProgramToRun = "PedalTanks_0.0.7/PedalTanks_0.0.7.exe";
 
-        public const string RootPath = "C:/Users/Stian/Desktop/TEST/client";
+        public const string RootPath = ".";
 
-        private static readonly Logger _logger = new Logger();
+        private static readonly Logger Logger = new Logger();
 
 		public static void Main (string[] args)
 		{
-            _logger.Log("Launchie v" + Version + ".", Logger.LogLevel.Medium);
-            _logger.Log("Creating HashDownloader..", Logger.LogLevel.Verbose);
+            Logger.Log("Launchie v" + Version + ".", Logger.LogLevel.Medium);
+            DeleteOldLauncherFile();
+            Logger.Log("Creating HashDownloader..", Logger.LogLevel.Verbose);
             var hashDownloader = new HashDownloader (RootPath);
-            _logger.Log("Done.", Logger.LogLevel.Verbose);
-            _logger.Log("Checking files..", Logger.LogLevel.Medium);
+            Logger.Log("Done.", Logger.LogLevel.Verbose);
+            Logger.Log("Checking files..", Logger.LogLevel.Medium);
             var filesToDownload = hashDownloader.GetMissingOrDifferentFileNames ();
-            _logger.Log("Downloading missing or outdated files..", Logger.LogLevel.Medium);
+            Logger.Log("Downloading missing or outdated files..", Logger.LogLevel.Medium);
 		    var nFilesToDownload = filesToDownload.Count;
 		    for (var i = 0; i < nFilesToDownload; i++)
             {
+                if (filesToDownload[i] == LauncherFileName)
+                {
+                    Logger.Log("New version of Launchie detected!", Logger.LogLevel.High);
+                    MoveLauncherFile();
+                }
                 Console.SetCursorPosition(0, Console.CursorTop);
                 string progressText = "(" + (i + 1) + "/" + nFilesToDownload + ")";
 		        string logLine = filesToDownload[i];
@@ -39,15 +50,37 @@ namespace Client
                 Console.Write(progressText);
 		        FileDownloader.DownloadFile(RootPath, filesToDownload[i]);
 		    }
-            _logger.Log("Done checking files.", Logger.LogLevel.Medium);
-		    var fullPath = RootPath + "/" + ProgramToRun;
-            _logger.Log("Launching program: " + fullPath + "..", Logger.LogLevel.Verbose);
-		    var start = new ProcessStartInfo
+            Logger.Log("Done checking files.", Logger.LogLevel.Medium);
+		    if (!File.Exists(ProgramToRun))
 		    {
-		        FileName = fullPath,
-		    };
-		    Process.Start(start);
-            _logger.Log("Done.", Logger.LogLevel.Verbose);
+		        Logger.Log("Program to run (" + ProgramToRun + ") not found!", Logger.LogLevel.High);
+		        Console.Read();
+		    }
+		    else
+		    {
+		        Logger.Log("Launching program: " + ProgramToRun + "..", Logger.LogLevel.Verbose);
+		        var start = new ProcessStartInfo
+		        {
+		            FileName = ProgramToRun,
+		        };
+		        Process.Start(start);
+		    }
+		    Logger.Log("Done.", Logger.LogLevel.Verbose);
 		}
+
+	    private static void MoveLauncherFile()
+	    {
+	        File.Move(LauncherFileName, OldLuancherFileName);
+	    }
+
+	    private static void DeleteOldLauncherFile()
+	    {
+	        if (File.Exists(OldLuancherFileName))
+	        {
+	            Logger.Log("Old launcher detected - deleting", Logger.LogLevel.High);
+                File.Delete(OldLuancherFileName);
+                Logger.Log("Done.", Logger.LogLevel.Verbose);
+	        }
+	    }
 	}
 }
