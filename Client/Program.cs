@@ -9,12 +9,14 @@ namespace Client
 {
 	class MainClass
     {
-        public static readonly Version Version = new Version("0.0.2");
+        public static readonly Version Version = new Version("0.0.1");
 
 	    public const string LauncherFileName = "Launcher.exe";
 	    public const string OldLuancherFileName = "Launcher_old.exe";
+	    public const string DllFileName = "Utils.dll";
+        public const string OldDllFileName = "Utils_old.dll";
 
-        public const string ProgramToRun = "PedalTanks_0.0.7/PedalTanks_0.0.7.exe";
+        public const string ProgramToRun = "PedalTanks.exe";
 
         public const string RootPath = ".";
 
@@ -37,6 +39,11 @@ namespace Client
                 {
                     Logger.Log("New version of Launchie detected!", Logger.LogLevel.High);
                     MoveLauncherFile();
+                }
+                else if (filesToDownload[i] == DllFileName)
+                {
+                    Logger.Log("New version of DLL detected!", Logger.LogLevel.High);
+                    MoveDllFile();
                 }
                 Console.SetCursorPosition(0, Console.CursorTop);
                 string progressText = "(" + (i + 1) + "/" + nFilesToDownload + ")";
@@ -73,6 +80,11 @@ namespace Client
 	        File.Move(LauncherFileName, OldLuancherFileName);
 	    }
 
+	    private static void MoveDllFile()
+	    {
+	        File.Move(DllFileName, OldDllFileName);
+	    }
+
 	    private static void DeleteOldLauncherFile()
 	    {
 	        if (File.Exists(OldLuancherFileName))
@@ -81,6 +93,16 @@ namespace Client
                 File.Delete(OldLuancherFileName);
                 Logger.Log("Done.", Logger.LogLevel.Verbose);
 	        }
+	    }
+
+	    private static void DeleteOldDllFile()
+	    {
+            if (File.Exists(OldDllFileName))
+            {
+                Logger.Log("Old DLL detected - deleting", Logger.LogLevel.High);
+                File.Delete(OldDllFileName);
+                Logger.Log("Done.", Logger.LogLevel.Verbose);
+            }
 	    }
 	}
 }
