@@ -26,6 +26,7 @@ namespace Client
 		{
             Logger.Log("Launchie v" + Version + ".", Logger.LogLevel.Medium);
             DeleteOldLauncherFile();
+            DeleteOldDllFile();
             Logger.Log("Creating HashDownloader..", Logger.LogLevel.Verbose);
             var hashDownloader = new HashDownloader (RootPath);
             Logger.Log("Done.", Logger.LogLevel.Verbose);
