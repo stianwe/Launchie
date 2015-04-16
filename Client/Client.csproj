@@ -6,7 +6,7 @@
     <ProjectGuid>{DE166F2A-C851-4EF5-8596-3FBC2F27CC6F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Client</RootNamespace>
-    <AssemblyName>Launcher</AssemblyName>
+    <AssemblyName>Client</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -45,4 +45,7 @@
       <Name>Utils</Name>
     </ProjectReference>
   </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>ilmerge /target:exe /targetplatform:v4 /out:Launcher.exe Client.exe Utils.dll</PostBuildEvent>
+  </PropertyGroup>
 </Project>

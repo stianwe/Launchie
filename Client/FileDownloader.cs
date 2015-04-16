@@ -20,7 +20,7 @@ namespace Client
 			var fullPath = rootDir + "/" + fileName;
             _logger.Log("Full path: " + fullPath, Logger.LogLevel.Verbose);
 			CreateDirs (fullPath);
-            _logger.Log("Connecting to fil eserver..", Logger.LogLevel.Verbose);
+            _logger.Log("Connecting to file eserver..", Logger.LogLevel.Verbose);
 			using (var client = new TcpClient(Host, Port))
 			//using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
 			using (var output = File.Create(fullPath))
