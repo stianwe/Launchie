@@ -9,19 +9,15 @@ namespace Client
 	{
 		public const int BufferSize = 1024;
 
-		public const string Host = "localhost";
-
-		public const int Port = 13338;
-
         private static Logger _logger = new Logger("FileDownloader");
 
-		public static void DownloadFile(string rootDir, string fileName) {
+		public static void DownloadFile(string rootDir, string fileName, string host, int port) {
             _logger.Log("Downloading file: " + fileName, Logger.LogLevel.Verbose);
 			var fullPath = rootDir + "/" + fileName;
             _logger.Log("Full path: " + fullPath, Logger.LogLevel.Verbose);
 			CreateDirs (fullPath);
             _logger.Log("Connecting to file eserver..", Logger.LogLevel.Verbose);
-			using (var client = new TcpClient(Host, Port))
+			using (var client = new TcpClient(host, port))
 			//using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
 			using (var output = File.Create(fullPath))
 			using (var networkStream = client.GetStream()) 

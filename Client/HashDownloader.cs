@@ -7,18 +7,19 @@ namespace Client
 {
 	public class HashDownloader
 	{
-		public const string Host = "localhost";
-		public const int Port = 13337;
-
+	    private string _host;
+	    private int _port;
 		private string _rootDir;
 
 	    private static Logger _logger = new Logger("HashDownloader");
 
-		public HashDownloader (string rootDir)
+		public HashDownloader (string rootDir, string host, int port)
 		{
+		    _host = host;
+		    _port = port;
 			_rootDir = rootDir;
-            _logger.Log("Host: " + Host, Logger.LogLevel.Verbose);
-            _logger.Log("Port: " + Port, Logger.LogLevel.Verbose);
+            _logger.Log("Host: " + _host, Logger.LogLevel.Verbose);
+            _logger.Log("Port: " + _port, Logger.LogLevel.Verbose);
             _logger.Log("Root directory: " + rootDir, Logger.LogLevel.Verbose);
 		}
 
@@ -49,10 +50,10 @@ namespace Client
 			return missingOrDifferent;
 		}
 
-		public static Dictionary<string, byte[]> GetServerHashes()
+		public Dictionary<string, byte[]> GetServerHashes()
 		{
-            _logger.Log("Connecting to " + Host + " on " + Port + "..", Logger.LogLevel.Verbose);
-			using (var client = new TcpClient (Host, Port)) 
+            _logger.Log("Connecting to " + _host + " on " + _port + "..", Logger.LogLevel.Verbose);
+			using (var client = new TcpClient (_host, _port)) 
 			{
 				using (var stream = client.GetStream ()) 
 				{

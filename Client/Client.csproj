@@ -6,7 +6,7 @@
     <ProjectGuid>{DE166F2A-C851-4EF5-8596-3FBC2F27CC6F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Client</RootNamespace>
-    <AssemblyName>Client</AssemblyName>
+    <AssemblyName>Launcher</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -44,6 +45,11 @@
       <Project>{48AF5B51-CBA9-409A-A505-53B93E3DA71C}</Project>
       <Name>Utils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>ilmerge /target:exe /targetplatform:v4 /out:Launcher.exe Client.exe Utils.dll</PostBuildEvent>

@@ -8,33 +8,35 @@ namespace Server
 {
 	public class FileServer
 	{
-		public const int Port = 13338;
-
-		public const int ClientLimit = 5;
-
 		private string _rootDir;
 
 		private TcpListener _listener;
 
 	    private Logger _logger;
 
-		public FileServer (string rootDir)
+	    private int _port;
+
+	    private int _clientLimit;
+
+		public FileServer(string rootDir, int port, int clientLimit)
 		{
 			_rootDir = rootDir;
+		    _port = port;
+		    _clientLimit = clientLimit;
             _logger = new Logger("FileServer");
 		}
 
 		public void Start() {
             _logger.Log("Starting..", Logger.LogLevel.Medium);
-            _logger.Log("Port: " + Port, Logger.LogLevel.Medium);
+            _logger.Log("Port: " + _port, Logger.LogLevel.Medium);
             _logger.Log("Root directory: " + _rootDir, Logger.LogLevel.Medium);
-            _logger.Log("Client limit: " + ClientLimit, Logger.LogLevel.Medium);
-            _logger.Log("Starting TCP listener on port " + Port + "..", Logger.LogLevel.Medium);
-			_listener = new TcpListener (Port);
+            _logger.Log("Client limit: " + _clientLimit, Logger.LogLevel.Medium);
+            _logger.Log("Starting TCP listener on port " + _port + "..", Logger.LogLevel.Medium);
+			_listener = new TcpListener (_port);
 			_listener.Start ();
             _logger.Log("Done.", Logger.LogLevel.Medium);
-            _logger.Log("Starting " + ClientLimit + " client file service threads..", Logger.LogLevel.Medium);
-			for (var i = 0; i < ClientLimit; i++) {
+            _logger.Log("Starting " + _clientLimit + " client file service threads..", Logger.LogLevel.Medium);
+			for (var i = 0; i < _clientLimit; i++) {
                 _logger.Log("Starting client file service thread (" + i + ")..", Logger.LogLevel.Verbose);
 				new Thread (Service).Start ();
 				_logger.Log("Done.", Logger.LogLevel.Verbose);
