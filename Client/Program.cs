@@ -67,7 +67,8 @@ namespace Client
 		    LoadConfig();
 		    if (!_configSuccessfullyLoaded)
 		    {
-		        Logger.Log("Failed loading config. Exiting.", Logger.LogLevel.High);
+                Logger.Log("Failed loading config. Exiting.", Logger.LogLevel.High);
+                Console.Read();
 		        return;
 		    }
             Logger.Log("Done loading config.", Logger.LogLevel.Verbose);
