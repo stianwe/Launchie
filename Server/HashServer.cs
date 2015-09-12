@@ -5,7 +5,10 @@ using Launchie;
 
 namespace Server
 {
-	public class HashServer
+    using System.Collections.Generic;
+    using System.Configuration;
+
+    public class HashServer
 	{
 		private TcpListener _listener;
 
@@ -16,6 +19,8 @@ namespace Server
 	    private readonly int _port;
 
 	    private readonly int _clientLimit;
+
+        private readonly ReaderWriterLock _reHashLock = new ReaderWriterLock();
 
 		public HashServer (string rootDir, int port, int clientLimit)
 		{
@@ -30,10 +35,10 @@ namespace Server
             _logger.Log("Port: " + _port, Logger.LogLevel.Medium);
             _logger.Log("Root directory: " + _rootDir, Logger.LogLevel.Medium);
             _logger.Log("Client limit: " + _clientLimit, Logger.LogLevel.Medium);
-            _logger.Log("Computing file hashes..", Logger.LogLevel.Medium);
-			Hasher.GetDirectoryHash (_rootDir, true);
-            _logger.Log("Done.", Logger.LogLevel.Medium);
-			_logger.Log("Starting TCP listener on port " + _port + "..", Logger.LogLevel.Medium);
+		    _logger.Log("Computing file hashes..", Logger.LogLevel.Medium);
+		    Hasher.GetDirectoryHash(_rootDir, true);
+		    _logger.Log("Done.", Logger.LogLevel.Medium);
+		    _logger.Log("Starting TCP listener on port " + _port + "..", Logger.LogLevel.Medium);
 			_listener = new TcpListener (_port);
 			_listener.Start ();
             _logger.Log("Done.", Logger.LogLevel.Medium);
@@ -48,6 +53,16 @@ namespace Server
             _logger.Log("Successfully started.", Logger.LogLevel.Medium);
 		}
 
+        public void ReHash()
+        {
+            _logger.Log("Performing complete re-hashing..", Logger.LogLevel.Medium);
+            _reHashLock.AcquireWriterLock(-1);
+            Hasher.Hashes.Clear();
+            Hasher.GetDirectoryHash(_rootDir, true);
+            _reHashLock.ReleaseWriterLock();
+            _logger.Log("Re-hashing complete.", Logger.LogLevel.Medium);
+        }
+
 		public void Service()
 		{
 			while (true) {
@@ -56,7 +71,9 @@ namespace Server
                     _logger.Log("Client connected: " + sock.RemoteEndPoint, Logger.LogLevel.Verbose);
 					using (var s = new NetworkStream (sock)) {
                         _logger.Log("Sending hashes to client..", Logger.LogLevel.Verbose);
+                        _reHashLock.AcquireReaderLock(-1);
 						new HashesContainer (Hasher.Hashes).Serialize (s);
+                        _reHashLock.ReleaseReaderLock();
 						_logger.Log("Done.", Logger.LogLevel.Verbose);
 					}
 				}
